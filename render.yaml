@@ -4,6 +4,6 @@ services:
     runtime: python
     plan: free
     region: singapore
-    buildCommand: pip install -r requirements.txt && python -c "import base64,zlib,pathlib; p=pathlib.Path('static'); p.mkdir(exist_ok=True); p.joinpath('index.html').write_bytes(zlib.decompress(base64.b64decode(p.joinpath('ui.zlib.b64').read_text().strip())))"
+    buildCommand: pip install -r requirements.txt && python -c "from pathlib import Path; p=Path('static/ui.zlib.b64'); t=p.read_text(); p.write_text(t[:1237]+'S'+t[1238:] if len(t)>1237 and t[1237]=='T' else t)" && python -c "import base64,zlib,pathlib; p=pathlib.Path('static'); p.joinpath('index.html').write_bytes(zlib.decompress(base64.b64decode(p.joinpath('ui.zlib.b64').read_text().strip())))"
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
