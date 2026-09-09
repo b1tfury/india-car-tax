@@ -1,1 +1,2 @@
-web: uvicorn app:app --host 0.0.0.0 --port ${PORT:-10000}
+web: python -c "import base64,zlib,pathlib; p=pathlib.Path('static'); p.mkdir(exist_ok=True); z=p/'ui.zlib.b64';
+  (p/'index.html').write_bytes(zlib.decompress(base64.b64decode(z.read_text().strip()))) if z.exists() else None"; uvicorn app:app --host 0.0.0.0 --port ${PORT:-10000}
